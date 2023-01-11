@@ -1,43 +1,46 @@
-use std::{collections::HashMap, hash::Hash};
+use std::collections::HashMap;
+use std::io::Write;
 
 struct SBoard {
     board: [[u8; 9]; 9],
 }
 
 impl SBoard {
-    fn is_valid() -> bool {
+    fn is_valid(&self) -> bool {
         for i in 0..9 as usize {
-            if !chk_row(i) || !chk_col(i) || !chk_sqr() {
-                false
+            if !self.chk_row(i) || !self.chk_col(i) || !self.chk_sqr(i) {
+                return false;
             }
         }
 
         true
     }
 
-    fn chk_row(row: usize) -> bool {
-        let digits = HashMap::new();
+    fn chk_row(&self, row: usize) -> bool {
+        let mut digits = HashMap::new();
         for i in 0..9 as usize {
-            cur_dig = board[row][i];
-            if cur_dig != 0 && digits.contains_key(cur_dig) {
-                false
+            let cur_dig = self.board[row][i];
+            if cur_dig != 0 && digits.contains_key(&cur_dig) {
+                return false;
             }
             digits.insert(cur_dig, true);
         }
+        true
     }
 
-    fn chk_col(col: usize) -> bool {
-        let digits = HashMap::new();
+    fn chk_col(&self, col: usize) -> bool {
+        let mut digits = HashMap::new();
         for i in 0..9 as usize {
-            cur_dig = board[i][col];
-            if cur_dig != 0 && digits.contains_key(cur_dig) {
-                false
+            let cur_dig = self.board[i][col];
+            if cur_dig != 0 && digits.contains_key(&cur_dig) {
+                return false;
             }
             digits.insert(cur_dig, true);
         }
+        true
     }
 
-    fn chk_sqr(grid: usize) -> bool {
+    fn chk_sqr(&self, grid: usize) -> bool {
         let (i, j) = match grid {
             0 => (0, 0),
             1 => (0, 3),
@@ -48,11 +51,12 @@ impl SBoard {
             6 => (6, 0),
             7 => (6, 3),
             8 => (6, 6),
+            _ => panic!("Illegal grid"),
         };
 
-        let sqrs = Vec::new();
+        let mut sqrs = Vec::new();
 
-        let digits = HashMap::new();
+        let mut digits = HashMap::new();
 
         sqrs.push((i + 0, j + 0));
         sqrs.push((i + 0, j + 1));
@@ -65,13 +69,60 @@ impl SBoard {
         sqrs.push((i + 2, j + 2));
 
         for (r, c) in sqrs {
-            cur_dig = board[r][c];
-            if cur_dig != 0 && digits.contains_key(cur_dig) {
-                false
+            let cur_dig = self.board[r][c];
+            if cur_dig != 0 && digits.contains_key(&cur_dig) {
+                return false;
             }
             digits.insert(cur_dig, true);
         }
 
         true
+    }
+}
+
+impl SBoard {
+    pub fn new() -> Self {
+        Self { board: [[0; 9]; 9] }
+    }
+
+    pub fn load() -> Self {
+        let mut new_board = Self::new();
+
+        print!("How many entries?: ");
+
+        let entry_no = get_input();
+
+        for _i in 0..entry_no {
+            print!("Enter row and col:");
+            let Tuple(r, c): Tuple = get_input();
+            print!("Enter value: ");
+            let num = get_input();
+            new_board.board[r - 1][c - 1] = num;
+        }
+        new_board
+    }
+}
+
+fn get_input<T: std::str::FromStr>() -> T {
+    std::io::stdout().flush().unwrap();
+    let mut buf = String::new();
+    std::io::stdin().read_line(&mut buf);
+
+    match buf.parse() {
+        Ok(n) => n,
+        Err(_) => panic!("Wrong input"),
+    }
+}
+
+struct Tuple(usize, usize);
+
+impl std::str::FromStr for Tuple {
+    type Err = std::num::ParseIntError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut vals = s.split_whitespace();
+        let a: usize = vals.nth(0).unwrap().parse().unwrap();
+        let b: usize = vals.nth(1).unwrap().parse().unwrap();
+        Ok(Tuple(a, b))
     }
 }
