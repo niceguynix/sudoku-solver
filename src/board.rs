@@ -125,3 +125,21 @@ impl std::str::FromStr for Tuple {
         Ok(Tuple(a, b))
     }
 }
+
+impl SBoard {
+    pub fn display(&self) {
+        let b = self.board;
+        for i in 0..9 as usize {
+            for j in 0..9 as usize {
+                match j {
+                    3 | 6 => print!("|{}", self.board[i][j]),
+                    _ => print!("{}", self.board[i][j]),
+                }
+            }
+            match i {
+                2 | 5 => print!("\n-----------\n"),
+                _ => print!("\n"),
+            }
+        }
+    }
+}
