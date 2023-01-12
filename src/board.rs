@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::io::Write;
 
-struct SBoard {
+pub struct SBoard {
     board: [[u8; 9]; 9],
 }
 
@@ -103,12 +103,11 @@ impl SBoard {
     }
 }
 
-fn get_input<T: std::str::FromStr>() -> T {
+pub fn get_input<T: std::str::FromStr>() -> T {
     std::io::stdout().flush().unwrap();
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf);
-
-    match buf.parse() {
+    match buf.trim().parse() {
         Ok(n) => n,
         Err(_) => panic!("Wrong input"),
     }
@@ -122,7 +121,7 @@ impl std::str::FromStr for Tuple {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut vals = s.split_whitespace();
         let a: usize = vals.nth(0).unwrap().parse().unwrap();
-        let b: usize = vals.nth(1).unwrap().parse().unwrap();
+        let b: usize = vals.nth(0).unwrap().parse().unwrap();
         Ok(Tuple(a, b))
     }
 }
