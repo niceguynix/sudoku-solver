@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::io::Write;
 
 pub struct SBoard {
-    board: [[u8; 9]; 9],
+    pub board: [[u8; 9]; 9],
 }
 
 impl SBoard {
@@ -127,13 +127,12 @@ impl std::str::FromStr for Tuple {
 }
 
 impl SBoard {
-    pub fn display(&self) {
-        let b = self.board;
+    pub fn display(b:[[u8;9];9]) {
         for i in 0..9 as usize {
             for j in 0..9 as usize {
                 match j {
-                    3 | 6 => print!("|{}", self.board[i][j]),
-                    _ => print!("{}", self.board[i][j]),
+                    3 | 6 => print!("|{}", b[i][j]),
+                    _ => print!("{}", b[i][j]),
                 }
             }
             match i {

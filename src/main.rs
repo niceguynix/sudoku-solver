@@ -1,4 +1,5 @@
 mod board;
+mod wfc;
 use board::{get_input, SBoard};
 
 fn main() {
@@ -13,5 +14,14 @@ fn run() {
         'n' => SBoard::new(),
         _ => panic!("Invalid choice!"),
     };
-    board.display();
+    SBoard::display(board.board);
+
+    let mut Wfc = wfc::WFC::new();
+    Wfc.load(board);
+
+    loop{
+        Wfc.run();
+        SBoard::display(Wfc.board);
+        println!("\n\n\n");
+    }
 }
